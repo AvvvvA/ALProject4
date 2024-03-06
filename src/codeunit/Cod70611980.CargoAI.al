@@ -73,6 +73,9 @@ codeunit 70611980 CargoAI
         Response: HttpResponseMessage;
         Headers: HttpHeaders;
 
+        Flight: Record Flight;
+        FlightLeg: Record "Flight Leg";
+
         Textvar: Text;
     begin
         //RequestParameters.Add('input', RequestText);
@@ -112,10 +115,50 @@ codeunit 70611980 CargoAI
                         if token.IsArray() then begin
                             Flights := token.AsArray();
                             foreach token in Flights do begin
+                                //Clear(Flight);
                                 if token.IsObject() then
                                     CurrFlight := token.AsObject();
-                                if CurrFlight.get('flightUID', token1) then
-                                ;
+                                if CurrFlight.get('flightUID', token1) then begin
+                                    Clear(Flight);
+                                    Evaluate(Flight."Request UID", Textvar);
+                                    Evaluate(Flight."Flight UID", format(token1.AsValue().AsText()));
+                                    Flight.Insert(true);
+
+                                    if CurrFlight.get('airlineCode', token1) then
+                                        Flight."Airline Code" := token1.AsValue().AsText();
+                                    if CurrFlight.get('flightNumber', token1) then
+                                        Flight."Flight Number" := token1.AsValue().AsText();
+                                    if CurrFlight.get('arrivalTime', token1) then
+                                        Flight."Arrival DateTime" := token1.AsValue().AsDateTime();
+                                    if CurrFlight.get('arrivalAirport', token1) then
+                                        Flight."Arrival Airport" := token1.AsValue().AsText();
+                                    if CurrFlight.get('departureTime', token1) then
+                                        Flight."Departure DateTime" := token1.AsValue().AsDateTime();
+                                    if CurrFlight.get('departureAirport', token1) then
+                                        Flight."Departure Airport" := token1.AsValue().AsText();
+                                    if CurrFlight.get('latestAcceptanceTime', token1) then
+                                        Flight."Latest Acceptance DateTime" := token1.AsValue().AsDateTime();
+                                    if CurrFlight.get('timeOfAvailability', token1) then
+                                        Flight."Time Of Availability" := token1.AsValue().AsDateTime();
+                                    /*                                        
+                                    if CurrFlight.get('', token1) then
+                                        Flight. := token1.AsValue().AsDateTime();                                        
+                                    if CurrFlight.get('', token1) then
+                                        Flight. := token1.AsValue().AsDateTime();
+                                    */
+                                    if CurrFlight.get('available', token1) then
+                                        Flight.Available := token1.AsValue().AsBoolean();
+                                    if CurrFlight.get('awbPrefix', token1) then
+                                        Flight.AwbPrefix := token1.AsValue().AsText();
+                                    if CurrFlight.get('handlingInfoLink', token1) then
+                                        Flight.HandlingInfoLink := token1.AsValue().AsText();
+                                    if CurrFlight.get('ghaName', token1) then
+                                        Flight."Gha Name" := token1.AsValue().AsText();
+                                    if CurrFlight.get('ghaAddress', token1) then
+                                        Flight."Gha Address" := token1.AsValue().AsText();
+
+                                    Flight.Modify(true);
+                                end;
                             end;
                         end;
 

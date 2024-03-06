@@ -17,7 +17,7 @@ table 70611980 "Flight"
         {
             DataClassification = ToBeClassified;
         }
-        field(11; "flightNumber"; Text[250])
+        field(11; "Flight Number"; Text[250])
         {
             DataClassification = ToBeClassified;
         }
